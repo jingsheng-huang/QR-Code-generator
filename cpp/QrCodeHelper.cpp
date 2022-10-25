@@ -15,7 +15,6 @@
 
 #define _CRT_SECURE_NO_DEPRECATE
 #pragma pack(1)// need this, otherwise cant get correct result of sizeof
-#include <iostream>
 #include "QRCodeHelper.hpp"
 
 using qrcodegen::QrSegment;
@@ -185,16 +184,6 @@ bool QRCdodeHelper::SaveQRDataToBMP(const QrCode& qrCode, const char* pathWithFi
 
     unsigned char* data = new unsigned char[lineByte * height];
     memset(data, 255, lineByte * height);//set to white by default
-
-    for (int i = 0; i < width; ++i)
-    {
-        for (int j = 0; j < height; ++j)
-        {
-            qrCode.getModule(i, j) ? printf("%c%c", 219, 219) : printf("  ");
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
 
     for (int i = 0; i < width; ++i)
     {
