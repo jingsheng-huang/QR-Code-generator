@@ -38,115 +38,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include "QRCodeHelper.hpp"
 using qrcodegen::QrCode;
 using qrcodegen::QrSegment;
-
-
-#pragma pack(2)//必须得写，否则sizeof得不到正确的结果
-
-typedef unsigned char  BYTE;
-typedef unsigned short WORD;
-typedef unsigned long  DWORD;
-typedef long    LONG;
-typedef struct {
-    WORD    bfType;
-    DWORD   bfSize;
-    WORD    bfReserved1;
-    WORD    bfReserved2;
-    DWORD   bfOffBits;
-} BITMAPFILEHEADER;
-
-typedef struct {
-    DWORD      biSize;
-    LONG       biWidth;
-    LONG       biHeight;
-    WORD       biPlanes;
-    WORD       biBitCount;
-    DWORD      biCompression;
-    DWORD      biSizeImage;
-    LONG       biXPelsPerMeter;
-    LONG       biYPelsPerMeter;
-    DWORD      biClrUsed;
-    DWORD      biClrImportant;
-} BITMAPINFOHEADER;
-
-int SaveToBMP(const QrCode& qrCode) // to 145*145
-{
-    //将要生成的二维码保存为BMP真彩色图片文件
-    FILE* pf = fopen("qrcode.bmp", "wb");
-    if (NULL == pf)
-    {
-        printf("file open fail.\n");
-        fclose(pf);
-        return -1;
-    }
-    int width = qrCode.getSize();
-    int height = qrCode.getSize();
-    int biCount = 24;//真彩色
-    int lineByte = (width * biCount / 8 + 3) / 4 * 4; //每line字节数必须为4的倍数
-
-    //位图文件头
-    BITMAPFILEHEADER bitMapFileHeader;
-    bitMapFileHeader.bfType = 0x4D42;
-    bitMapFileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + lineByte * height;
-    bitMapFileHeader.bfReserved1 = 0;
-    bitMapFileHeader.bfReserved2 = 0;
-    bitMapFileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
-    //位图信息头
-    BITMAPINFOHEADER bitMapInfoHeader;
-    bitMapInfoHeader.biBitCount = biCount;
-    bitMapInfoHeader.biClrImportant = 0;
-    bitMapInfoHeader.biClrUsed = 0;
-    bitMapInfoHeader.biCompression = 0;
-    bitMapInfoHeader.biHeight = height;
-    bitMapInfoHeader.biPlanes = 1;
-    bitMapInfoHeader.biSize = 40;
-    bitMapInfoHeader.biSizeImage = lineByte * height;
-    bitMapInfoHeader.biWidth = width;
-    bitMapInfoHeader.biXPelsPerMeter = 0;
-    bitMapInfoHeader.biYPelsPerMeter = 0;
-    //写文件头进文件
-    fwrite(&bitMapFileHeader, sizeof(BITMAPFILEHEADER), 1, pf);
-    //写位图信息头进文件
-    fwrite(&bitMapInfoHeader, sizeof(BITMAPINFOHEADER), 1, pf);
-    unsigned char* pBMPData = new unsigned char[lineByte * height];
-    memset(pBMPData, 255, lineByte * height);
-
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < height; x++)
-        {
-            //qrCode.getModule(x, y) ? printf("##") : printf("  ");
-			qrCode.getModule(x, y) ? printf("%c%c", 219, 219) : printf("  ");
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-
-    for (int i = 0; i < height; i++)
-    {
-        for (int j = 0; j < lineByte / 3; j++)
-        {
-            if (qrCode.getModule(j, i))
-            {
-                //设置rgb颜色，可自定义设置，这里设为黑色。
-                *(pBMPData + lineByte * i + 3 * j) = 0;
-                *(pBMPData + lineByte * i + 3 * j + 1) = 0;
-                *(pBMPData + lineByte * i + 3 * j + 2) = 0;
-            }
-        }
-    }
-
-    //写数据进文件
-    fwrite(pBMPData, sizeof(unsigned char), lineByte * height, pf);
-    fclose(pf);
-    delete[] pBMPData;
-    pBMPData = NULL;
-
-    return 0;
-}
 
 
 
@@ -172,14 +66,9 @@ int main() {
 
 // Creates a single QR Code, then prints it to the console.
 static void doBasicDemo() {
-	const char *text = "https://www.baidu.com/";              // User-supplied text
-	const QrCode::Ecc errCorLvl = QrCode::LOW;  // Error correction level
-	
-	// Make and print the QR Code symbol
-	const QrCode qr = QrCode::encodeText(text, errCorLvl);
-	//printQr(qr);
-
-    SaveToBMP(qr);
+	const char *text = "https://leica-geosystems.com/"; // User-supplied text
+    const char* pathWithFileName = "d:/qrcode.bmp";
+    QRCdodeHelper::GetBMPFile(text, pathWithFileName);
 }
 
 
