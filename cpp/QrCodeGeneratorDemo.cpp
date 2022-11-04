@@ -107,10 +107,10 @@ static void doSegmentDemo() {
 		QrCode::LOW);
 	printQr(qr0);
 	
-	std::vector<QrSegment> segs;
-	segs.push_back(QrSegment::makeAlphanumeric(silver0));
-	segs.push_back(QrSegment::makeAlphanumeric(silver1));
-	const QrCode qr1 = QrCode::encodeSegments(segs, QrCode::LOW);
+	std::vector<QrSegment> segmentSilver;
+	segmentSilver.push_back(QrSegment::makeAlphanumeric(silver0));
+	segmentSilver.push_back(QrSegment::makeAlphanumeric(silver1));
+	const QrCode qr1 = QrCode::encodeSegments(segmentSilver, QrCode::LOW);
 	printQr(qr1);
 	
 	// Illustration "golden"
@@ -123,11 +123,11 @@ static void doSegmentDemo() {
 	printQr(qr2);
 	
 	std::vector<uint8_t> bytes(golden0, golden0 + std::strlen(golden0));
-	std::vector<QrSegment> segs3;
-	segs3.push_back(QrSegment::makeBytes(bytes));
-	segs3.push_back(QrSegment::makeNumeric(golden1));
-	segs3.push_back(QrSegment::makeAlphanumeric(golden2));
-	const QrCode qr3 = QrCode::encodeSegments(segs3, QrCode::LOW);
+	std::vector<QrSegment> segmentGolden;
+	segmentGolden.push_back(QrSegment::makeBytes(bytes));
+	segmentGolden.push_back(QrSegment::makeNumeric(golden1));
+	segmentGolden.push_back(QrSegment::makeAlphanumeric(golden2));
+	const QrCode qr3 = QrCode::encodeSegments(segmentGolden, QrCode::LOW);
 	printQr(qr3);
 	
 	// Illustration "Madoka": kanji, kana, Cyrillic, full-width Latin, Greek characters
@@ -185,10 +185,10 @@ static void doSegmentDemo() {
 		bb.appendBits(static_cast<unsigned int>(kanjiChars[i]), 13);
 
 	QrSegment& segment = QrSegment(QrSegment::Mode::KANJI, static_cast<int>(kanjiChars.size()), bb);
-	std::vector<QrSegment> seg5;
-	seg5.push_back(segment);
+	std::vector<QrSegment> segmentKanji;
+	segmentKanji.push_back(segment);
 
-	const QrCode qr5 = QrCode::encodeSegments(seg5, QrCode::LOW);
+	const QrCode qr5 = QrCode::encodeSegments(segmentKanji, QrCode::LOW);
 	printQr(qr5);
 }
 
