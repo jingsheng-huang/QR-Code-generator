@@ -24,8 +24,6 @@
  *   Software.
  */
 
-#define _CRT_SECURE_NO_DEPRECATE
-
 #include <climits>
 #include <cstdlib>
 #include <cstring>
@@ -34,10 +32,6 @@
 #include <string>
 #include <vector>
 #include "qrcodegen.hpp"
-#include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
 using qrcodegen::QrCode;
 using qrcodegen::QrSegment;
@@ -54,9 +48,9 @@ static void printQr(const QrCode &qr);
 // The main application program.
 int main() {
 	doBasicDemo();
-	//doVarietyDemo();
-	//doSegmentDemo();
-	//doMaskDemo();
+	doVarietyDemo();
+	doSegmentDemo();
+	doMaskDemo();
 	return EXIT_SUCCESS;
 }
 
@@ -65,7 +59,7 @@ int main() {
 // Creates a single QR Code, then prints it to the console.
 static void doBasicDemo() {
 	const char *text = "Hello, world!";              // User-supplied text
-	const QrCode::Ecc errCorLvl = QrCode::Ecc::LOW;  // Error correction level
+	const QrCode::Ecc errCorLvl = QrCode::LOW;  // Error correction level
 	
 	// Make and print the QR Code symbol
 	const QrCode qr = QrCode::encodeText(text, errCorLvl);
@@ -113,10 +107,10 @@ static void doSegmentDemo() {
 		QrCode::LOW);
 	printQr(qr0);
 	
-	std::vector<QrSegment> segs;
-	segs.push_back(QrSegment::makeAlphanumeric(silver0));
-	segs.push_back(QrSegment::makeAlphanumeric(silver1));
-	const QrCode qr1 = QrCode::encodeSegments(segs, QrCode::LOW);
+	std::vector<QrSegment> segmentSilver;
+	segmentSilver.push_back(QrSegment::makeAlphanumeric(silver0));
+	segmentSilver.push_back(QrSegment::makeAlphanumeric(silver1));
+	const QrCode qr1 = QrCode::encodeSegments(segmentSilver, QrCode::LOW);
 	printQr(qr1);
 	
 	// Illustration "golden"
@@ -129,11 +123,11 @@ static void doSegmentDemo() {
 	printQr(qr2);
 	
 	std::vector<uint8_t> bytes(golden0, golden0 + std::strlen(golden0));
-	std::vector<QrSegment> segs3;
-	segs3.push_back(QrSegment::makeBytes(bytes));
-	segs3.push_back(QrSegment::makeNumeric(golden1));
-	segs3.push_back(QrSegment::makeAlphanumeric(golden2));
-	const QrCode qr3 = QrCode::encodeSegments(segs3, QrCode::LOW);
+	std::vector<QrSegment> segmentGolden;
+	segmentGolden.push_back(QrSegment::makeBytes(bytes));
+	segmentGolden.push_back(QrSegment::makeNumeric(golden1));
+	segmentGolden.push_back(QrSegment::makeAlphanumeric(golden2));
+	const QrCode qr3 = QrCode::encodeSegments(segmentGolden, QrCode::LOW);
 	printQr(qr3);
 	
 	// Illustration "Madoka": kanji, kana, Cyrillic, full-width Latin, Greek characters
@@ -150,21 +144,52 @@ static void doSegmentDemo() {
 	const QrCode qr4 = QrCode::encodeText(madoka, QrCode::LOW);
 	printQr(qr4);
 	
-	//const std::vector<int> kanjiChars{  // Kanji mode encoding (13 bits per character)
-	//	0x0035, 0x1002, 0x0FC0, 0x0AED, 0x0AD7,
-	//	0x015C, 0x0147, 0x0129, 0x0059, 0x01BD,
-	//	0x018D, 0x018A, 0x0036, 0x0141, 0x0144,
-	//	0x0001, 0x0000, 0x0249, 0x0240, 0x0249,
-	//	0x0000, 0x0104, 0x0105, 0x0113, 0x0115,
-	//	0x0000, 0x0208, 0x01FF, 0x0008,
-	//};
-	//qrcodegen::BitBuffer bb;
-	//for (int c : kanjiChars)
-	//	bb.appendBits(static_cast<std::uint32_t>(c), 13);
-	//const QrCode qr5 = QrCode::encodeSegments(
-	//	{QrSegment(QrSegment::Mode::KANJI, static_cast<int>(kanjiChars.size()), bb)},
-	//	QrCode::LOW);
-	//printQr(qr5);
+	std::vector<int> kanjiChars;// Kanji mode encoding (13 bits per character)
+	kanjiChars.push_back(0x0035);
+	kanjiChars.push_back(0x1002);
+	kanjiChars.push_back(0x0FC0);
+	kanjiChars.push_back(0x0AED);
+	kanjiChars.push_back(0x0AD7);
+
+	kanjiChars.push_back(0x015C);
+	kanjiChars.push_back(0x0147);
+	kanjiChars.push_back(0x0129);
+	kanjiChars.push_back(0x0059);
+	kanjiChars.push_back(0x01BD);
+
+	kanjiChars.push_back(0x018D);
+	kanjiChars.push_back(0x018A);
+	kanjiChars.push_back(0x0036);
+	kanjiChars.push_back(0x0141);
+	kanjiChars.push_back(0x0144);
+
+	kanjiChars.push_back(0x0001);
+	kanjiChars.push_back(0x0000);
+	kanjiChars.push_back(0x0249);
+	kanjiChars.push_back(0x0240);
+	kanjiChars.push_back(0x0249);
+
+	kanjiChars.push_back(0x0000);
+	kanjiChars.push_back(0x0104);
+	kanjiChars.push_back(0x0105);
+	kanjiChars.push_back(0x0113);
+	kanjiChars.push_back(0x0115);
+
+	kanjiChars.push_back(0x0000);
+	kanjiChars.push_back(0x0208);
+	kanjiChars.push_back(0x01FF);
+	kanjiChars.push_back(0x0008);
+
+	qrcodegen::BitBuffer bb;
+	for (unsigned int i = 0; i < kanjiChars.size(); ++i)
+		bb.appendBits(static_cast<unsigned int>(kanjiChars[i]), 13);
+
+	QrSegment& segment = QrSegment(QrSegment::Mode::KANJI, static_cast<int>(kanjiChars.size()), bb);
+	std::vector<QrSegment> segmentKanji;
+	segmentKanji.push_back(segment);
+
+	const QrCode qr5 = QrCode::encodeSegments(segmentKanji, QrCode::LOW);
+	printQr(qr5);
 }
 
 
@@ -228,7 +253,7 @@ static void printQr(const QrCode &qr) {
 	int border = 4;
 	for (int y = -border; y < qr.getSize() + border; y++) {
 		for (int x = -border; x < qr.getSize() + border; x++) {
-			qr.getModule(x, y) ? printf("%c%c", 219, 219) : printf("  ");
+			std::cout << (qr.getModule(x, y) ? "##" : "  ");
 		}
 		std::cout << std::endl;
 	}
