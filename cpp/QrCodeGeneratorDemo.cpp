@@ -1,4 +1,4 @@
-﻿/* 
+/* 
  * QR Code generator demo (C++)
  * 
  * Run this command-line program with no arguments. The program computes a bunch of demonstration
@@ -36,6 +36,7 @@
 using qrcodegen::QrCode;
 using qrcodegen::QrSegment;
 
+
 // Function prototypes
 static void doBasicDemo();
 static void doVarietyDemo();
@@ -54,6 +55,8 @@ int main() {
 	return EXIT_SUCCESS;
 }
 
+
+
 /*---- Demo suite ----*/
 
 // Creates a single QR Code, then prints it to the console.
@@ -65,7 +68,6 @@ static void doBasicDemo() {
 	const QrCode qr = QrCode::encodeText(text, errCorLvl);
 	printQr(qr);
 	std::cout << toSvgString(qr, 4) << std::endl;
-
 }
 
 
@@ -248,6 +250,7 @@ static std::string toSvgString(const QrCode &qr, int border) {
 	return sb.str();
 }
 
+
 // Prints the given QrCode object to the console.
 static void printQr(const QrCode &qr) {
 	int border = 4;
@@ -259,7 +262,3 @@ static void printQr(const QrCode &qr) {
 	}
 	std::cout << std::endl;
 }
-
-
-
-

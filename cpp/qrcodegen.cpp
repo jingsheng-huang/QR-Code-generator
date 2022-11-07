@@ -355,9 +355,7 @@ QrCode::QrCode(int ver, Ecc ecl, const vector<uint8_t> &dataCodewords, int msk) 
 	drawFormatBits(msk);  // Overwrite old format bits
 	
 	isFunction.clear();
-	//isFunction.shrink_to_fit();
-
-	//vector<int>(isFunction).swap(isFunction);
+	vector<vector<bool>>(isFunction).swap(isFunction);
 }
 
 
@@ -828,7 +826,5 @@ void BitBuffer::appendBits(uint32_t val, int len) {
 	for (int i = len - 1; i >= 0; i--)  // Append bit by bit
 		this->push_back(((val >> i) & 1) != 0);
 }
-
-
 
 }
