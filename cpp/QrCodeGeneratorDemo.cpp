@@ -250,6 +250,7 @@ static std::string toSvgString(const QrCode &qr, int border) {
 	return sb.str();
 }
 
+
 // Prints the given QrCode object to the console.
 static void printQr(const QrCode &qr) {
 	int border = 4;
@@ -261,7 +262,3 @@ static void printQr(const QrCode &qr) {
 	}
 	std::cout << std::endl;
 }
-
-
-
-

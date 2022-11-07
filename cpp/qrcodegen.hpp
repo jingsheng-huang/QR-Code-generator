@@ -33,6 +33,7 @@ typedef unsigned int size_t;
 typedef unsigned int uint32_t;
 
 namespace qrcodegen {
+
 /* 
  * A segment of character/binary/control data in a QR Code symbol.
  * Instances of this class are immutable.
